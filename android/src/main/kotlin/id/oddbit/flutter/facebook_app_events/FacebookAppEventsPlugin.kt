@@ -40,6 +40,9 @@ class FacebookAppEventsPlugin(registrar: Registrar) : MethodCallHandler {
       "setUserID" -> handleSetUserId(call, result)
       "updateUserProperties" -> handleUpdateUserProperties(call, result)
       "setAutoLogAppEventsEnabled" -> handleSetAutoLogAppEventsEnabled(call, result)
+      "setAdvertiserIdCollectionEnabled" -> handleSetAdvertiserIdCollectionEnabled(call, result)
+      "setAutoInitEnabled" -> handleSetAutoInitEnabled(call, result)
+      "initializeSdk" -> handleInitializeSdk(call, result)
       else -> result.notImplemented()
     }
   }
@@ -179,6 +182,24 @@ class FacebookAppEventsPlugin(registrar: Registrar) : MethodCallHandler {
   private fun handleSetAutoLogAppEventsEnabled(call: MethodCall, result: Result) {
     val enabled = call.arguments as Boolean
     FacebookSdk.setAutoLogAppEventsEnabled(enabled)
+    result.success(null)
+  }
+
+  private fun handleSetAdvertiserIdCollectionEnabled(call: MethodCall, result: Result) {
+    val enabled = call.arguments as Boolean
+    FacebookSdk.setAdvertiserIDCollectionEnabled(enabled)
+    result.success(null)
+  }
+
+  private fun handleSetAutoInitEnabled(call: MethodCall, result: Result) {
+    val enabled = call.arguments as Boolean
+    FacebookSdk.setAutoInitEnabled(enabled)
+    result.success(null)
+  }
+
+  private fun handleInitializeSdk(call: MethodCall, result: Result) {
+    val enabled = call.arguments as Boolean
+    FacebookSdk.fullyInitialize()
     result.success(null)
   }
 }

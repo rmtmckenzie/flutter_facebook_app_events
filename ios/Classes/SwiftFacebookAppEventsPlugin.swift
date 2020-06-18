@@ -41,6 +41,15 @@ public class SwiftFacebookAppEventsPlugin: NSObject, FlutterPlugin {
         case "setAutoLogAppEventsEnabled":
             handleSetAutoLogAppEventsEnabled(call, result: result)
             break
+        case "setAdvertiserIdCollectionEnabled":
+            handleSetAdvertiserIdCollectionEnabled(call, result: result)
+            break
+        case "setAutoInitEnabled":
+            handleSetAutoInitEnabled(call, result: result)
+            break
+        case "initializeSdk":
+            handleInitializeSdk(call, result: result)
+            break
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -130,6 +139,23 @@ public class SwiftFacebookAppEventsPlugin: NSObject, FlutterPlugin {
     private func handleSetAutoLogAppEventsEnabled(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         let enabled = call.arguments as! Bool
         Settings.isAutoLogAppEventsEnabled = enabled
+        result(nil)
+    }
+
+    private func handleSetAdvertiserIdCollectionEnabled(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let enabled = call.arguments as! Bool
+        Settings.isAdvertiserIDCollectionEnabled = enabled
+        result(nil)
+    }
+
+    private func handleSetAutoInitEnabled(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let enabled = call.arguments as! Bool
+        Settings.isAutoInitEnabled = enabled
+        result(nil)
+    }
+
+    private func handleInitializeSdk(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        ApplicationDelegate.initializeSDK(nil)
         result(nil)
     }
 }

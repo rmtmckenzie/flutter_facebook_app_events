@@ -210,4 +210,26 @@ class FacebookAppEvents {
   Future<void> setAutoLogAppEventsEnabled(bool enabled) {
     return _channel.invokeMethod<void>('setAutoLogAppEventsEnabled', enabled);
   }
+
+  /// Enables collection of advertiser ID after user consent if disabled
+  Future<void> setAdvertiserIdCollectionEnabled(bool enabled) {
+    return _channel.invokeMethod<void>('setAdvertiserIdCollectionEnabled', enabled);
+  }
+
+  /// Enables auto initialize after user consent
+  /// if disabled for GDPR-compliance.
+  ///
+  /// See: https://developers.facebook.com/docs/app-events/gdpr-compliance
+  Future<void> setAutoInitEnabled(bool enabled) {
+    return _channel.invokeMethod<void>('setAutoInitEnabled', enabled);
+  }
+
+  /// Fully initializes app after user consent if auto-init disabled
+  /// for GDPR-compliance
+  ///
+  /// See: https://developers.facebook.com/docs/app-events/gdpr-compliance
+  Future<void> initializeSdk() {
+    return _channel.invokeMethod<void>('initializeSdk');
+  }
+
 }
