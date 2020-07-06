@@ -198,7 +198,6 @@ class FacebookAppEventsPlugin(registrar: Registrar) : MethodCallHandler {
   }
 
   private fun handleInitializeSdk(call: MethodCall, result: Result) {
-    val enabled = call.arguments as Boolean
     FacebookSdk.fullyInitialize()
     result.success(null)
   }
