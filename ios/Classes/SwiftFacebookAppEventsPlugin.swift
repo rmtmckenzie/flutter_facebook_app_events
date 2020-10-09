@@ -50,30 +50,36 @@ public class SwiftFacebookAppEventsPlugin: NSObject, FlutterPlugin {
         case "initializeSdk":
             handleInitializeSdk(call, result: result)
             break
+        case "setDataProcessingOptions":
+            setDataProcessingOptions(call, result: result)
+            break
+        case "logPurchase":
+            handlePurchased(call, result: result)
+            break
         default:
             result(FlutterMethodNotImplemented)
         }
     }
-    
+
     private func handleClearUserData(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         AppEvents.clearUserData()
         result(nil)
     }
-    
+
     private func handleClearUserID(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         AppEvents.clearUserID()
         result(nil)
     }
-    
+
     private func handleFlush(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         AppEvents.flush()
         result(nil)
     }
-    
+
     private func handleGetApplicationId(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         result(Settings.appID)
     }
-    
+
     private func handleLogEvent(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         let arguments = call.arguments as? [String: Any] ?? [String: Any]()
         let eventName = arguments["name"] as! String
@@ -84,10 +90,10 @@ public class SwiftFacebookAppEventsPlugin: NSObject, FlutterPlugin {
         } else {
             AppEvents.logEvent(AppEvents.Name(eventName), parameters: parameters)
         }
-        
+
         result(nil)
     }
-    
+
     private func handlePushNotificationOpen(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         let arguments = call.arguments as? [String: Any] ?? [String: Any]()
         let payload = arguments["payload"] as? [String: Any]
@@ -97,10 +103,10 @@ public class SwiftFacebookAppEventsPlugin: NSObject, FlutterPlugin {
         } else {
             AppEvents.logPushNotificationOpen(payload!)
         }
-        
+
         result(nil)
     }
-    
+
     private func handleSetUserData(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         let arguments = call.arguments as? [String: Any] ?? [String: Any]()
         AppEvents.setUserData(arguments["email"] as? String, forType: AppEvents.UserDataType.email)
@@ -113,20 +119,20 @@ public class SwiftFacebookAppEventsPlugin: NSObject, FlutterPlugin {
         AppEvents.setUserData(arguments["state"] as? String, forType: AppEvents.UserDataType.state)
         AppEvents.setUserData(arguments["zip"] as? String, forType: AppEvents.UserDataType.zip)
         AppEvents.setUserData(arguments["country"] as? String, forType: AppEvents.UserDataType.country)
-        
+
         result(nil)
     }
-    
+
     private func handleSetUserId(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         let id = call.arguments as! String
         AppEvents.userID = id
         result(nil)
     }
-    
+
     private func handleUpdateUserProperties(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         let arguments = call.arguments as? [String: Any] ?? [String: Any]()
         let parameters =  arguments["parameters"] as! [String: Any]
-        
+
         AppEvents.updateUserProperties( parameters, handler: { (connection, response, error) in
             if error != nil {
                 result(nil)
@@ -135,7 +141,7 @@ public class SwiftFacebookAppEventsPlugin: NSObject, FlutterPlugin {
             }
         })
     }
-    
+
     private func handleSetAutoLogAppEventsEnabled(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         let enabled = call.arguments as! Bool
         Settings.isAutoLogAppEventsEnabled = enabled
@@ -156,6 +162,27 @@ public class SwiftFacebookAppEventsPlugin: NSObject, FlutterPlugin {
 
     private func handleInitializeSdk(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         ApplicationDelegate.initializeSDK(nil)
+        result(nil)
+    }
+
+    private func setDataProcessingOptions(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let arguments = call.arguments as? [String: Any] ?? [String: Any]()
+        let modes = arguments["options"] as? [String] ?? []
+        let state = arguments["state"] as? Int32 ?? 0
+        let country = arguments["country"] as? Int32 ?? 0
+
+        Settings.setDataProcessingOptions(modes, country: country, state: state)
+   
+        result(nil)
+    }
+
+    private func handlePurchased(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let arguments = call.arguments as? [String: Any] ?? [String: Any]()
+        let amount = arguments["amount"] as! Double
+        let currency = arguments["currency"] as! String
+        let parameters = arguments["parameters"] as? [String: Any] ?? [String: Any]()
+        AppEvents.logPurchase(amount, currency: currency, parameters: parameters)
+   
         result(nil)
     }
 }
