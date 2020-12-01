@@ -51,15 +51,11 @@ class FacebookAppEventsPlugin: FlutterPlugin, MethodCallHandler {
       "setUserID" -> handleSetUserId(call, result)
       "updateUserProperties" -> handleUpdateUserProperties(call, result)
       "setAutoLogAppEventsEnabled" -> handleSetAutoLogAppEventsEnabled(call, result)
-<<<<<<< HEAD
       "setAdvertiserIdCollectionEnabled" -> handleSetAdvertiserIdCollectionEnabled(call, result)
       "setAutoInitEnabled" -> handleSetAutoInitEnabled(call, result)
       "initializeSdk" -> handleInitializeSdk(call, result)
-      "setDataProcessingOptions" -> setDataProcessingOptions(call, result)
-=======
       "setDataProcessingOptions" -> handleSetDataProcessingOptions(call, result)
       "getAnonymousId" -> handleGetAnonymousId(call, result)
->>>>>>> master
       "logPurchase" -> handlePurchased(call, result)
       else -> result.notImplemented()
     }
@@ -207,7 +203,6 @@ class FacebookAppEventsPlugin: FlutterPlugin, MethodCallHandler {
     result.success(null)
   }
 
-<<<<<<< HEAD
   private fun handleSetAdvertiserIdCollectionEnabled(call: MethodCall, result: Result) {
     val enabled = call.arguments as Boolean
     FacebookSdk.setAdvertiserIDCollectionEnabled(enabled)
@@ -225,10 +220,7 @@ class FacebookAppEventsPlugin: FlutterPlugin, MethodCallHandler {
     result.success(null)
   }
 
-  private fun setDataProcessingOptions(call: MethodCall, result: Result) {
-=======
   private fun handleSetDataProcessingOptions(call: MethodCall, result: Result) {
->>>>>>> master
     val options = call.argument("options") as? ArrayList<String> ?: arrayListOf()
     val country = call.argument("country") as? Int ?: 0
     val state = call.argument("state") as? Int ?: 0
