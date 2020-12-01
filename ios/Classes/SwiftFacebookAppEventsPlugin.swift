@@ -8,7 +8,7 @@ public class SwiftFacebookAppEventsPlugin: NSObject, FlutterPlugin {
         let instance = SwiftFacebookAppEventsPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
-    
+
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
         case "clearUserData":
@@ -51,10 +51,13 @@ public class SwiftFacebookAppEventsPlugin: NSObject, FlutterPlugin {
             handleInitializeSdk(call, result: result)
             break
         case "setDataProcessingOptions":
-            setDataProcessingOptions(call, result: result)
+            handleSetDataProcessingOptions(call, result: result)
             break
         case "logPurchase":
             handlePurchased(call, result: result)
+            break
+        case "getAnonymousId":
+            handleHandleGetAnonymousId(call, result: result)
             break
         default:
             result(FlutterMethodNotImplemented)
@@ -78,6 +81,10 @@ public class SwiftFacebookAppEventsPlugin: NSObject, FlutterPlugin {
 
     private func handleGetApplicationId(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         result(Settings.appID)
+    }
+
+    private func handleHandleGetAnonymousId(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        result(AppEvents.anonymousID)
     }
 
     private func handleLogEvent(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -165,14 +172,14 @@ public class SwiftFacebookAppEventsPlugin: NSObject, FlutterPlugin {
         result(nil)
     }
 
-    private func setDataProcessingOptions(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    private func handleSetDataProcessingOptions(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         let arguments = call.arguments as? [String: Any] ?? [String: Any]()
         let modes = arguments["options"] as? [String] ?? []
         let state = arguments["state"] as? Int32 ?? 0
         let country = arguments["country"] as? Int32 ?? 0
 
         Settings.setDataProcessingOptions(modes, country: country, state: state)
-   
+
         result(nil)
     }
 
@@ -182,7 +189,7 @@ public class SwiftFacebookAppEventsPlugin: NSObject, FlutterPlugin {
         let currency = arguments["currency"] as! String
         let parameters = arguments["parameters"] as? [String: Any] ?? [String: Any]()
         AppEvents.logPurchase(amount, currency: currency, parameters: parameters)
-   
+
         result(nil)
     }
 }

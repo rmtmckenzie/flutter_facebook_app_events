@@ -1,33 +1,42 @@
 package id.oddbit.flutter.facebook_app_events
 
+import androidx.annotation.NonNull
+
 import android.os.Bundle
 import android.util.Log
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
 import com.facebook.GraphRequest
 import com.facebook.GraphResponse
+import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
-import java.math.BigDecimal
-import java.util.*
+import java.util.Currency
 
-class FacebookAppEventsPlugin(registrar: Registrar) : MethodCallHandler {
+/** FacebookAppEventsPlugin */
+class FacebookAppEventsPlugin: FlutterPlugin, MethodCallHandler {
+  /// The MethodChannel that will the communication between Flutter and native Android
+  ///
+  /// This local reference serves to register the plugin with the Flutter Engine and unregister it
+  /// when the Flutter Engine is detached from the Activity
+  private lateinit var channel : MethodChannel
+  private lateinit var appEventsLogger: AppEventsLogger
+  private lateinit var anonymousId: String
+
   private val logTag = "FacebookAppEvents"
-  var appEventsLogger: AppEventsLogger
 
-  init {
-    this.appEventsLogger = AppEventsLogger.newLogger(registrar.context())
+  override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+    channel = MethodChannel(flutterPluginBinding.binaryMessenger, "flutter.oddbit.id/facebook_app_events")
+    channel.setMethodCallHandler(this)
+    appEventsLogger = AppEventsLogger.newLogger(flutterPluginBinding.applicationContext)
+    anonymousId = AppEventsLogger.getAnonymousAppDeviceGUID(flutterPluginBinding.applicationContext)
   }
 
-  companion object {
-    @JvmStatic
-    fun registerWith(registrar: Registrar) {
-      val channel = MethodChannel(registrar.messenger(), "flutter.oddbit.id/facebook_app_events")
-      channel.setMethodCallHandler(FacebookAppEventsPlugin(registrar))
-    }
+  override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
+    channel.setMethodCallHandler(null)
   }
 
   override fun onMethodCall(call: MethodCall, result: Result) {
@@ -35,17 +44,22 @@ class FacebookAppEventsPlugin(registrar: Registrar) : MethodCallHandler {
       "clearUserData" -> handleClearUserData(call, result)
       "clearUserID" -> handleClearUserId(call, result)
       "flush" -> handleFlush(call, result)
-      "getApplicationId" -> getApplicationId(call, result)
+      "getApplicationId" -> handleGetApplicationId(call, result)
       "logEvent" -> handleLogEvent(call, result)
       "logPushNotificationOpen" -> handlePushNotificationOpen(call, result)
       "setUserData" -> handleSetUserData(call, result)
       "setUserID" -> handleSetUserId(call, result)
       "updateUserProperties" -> handleUpdateUserProperties(call, result)
       "setAutoLogAppEventsEnabled" -> handleSetAutoLogAppEventsEnabled(call, result)
+<<<<<<< HEAD
       "setAdvertiserIdCollectionEnabled" -> handleSetAdvertiserIdCollectionEnabled(call, result)
       "setAutoInitEnabled" -> handleSetAutoInitEnabled(call, result)
       "initializeSdk" -> handleInitializeSdk(call, result)
       "setDataProcessingOptions" -> setDataProcessingOptions(call, result)
+=======
+      "setDataProcessingOptions" -> handleSetDataProcessingOptions(call, result)
+      "getAnonymousId" -> handleGetAnonymousId(call, result)
+>>>>>>> master
       "logPurchase" -> handlePurchased(call, result)
       else -> result.notImplemented()
     }
@@ -66,8 +80,12 @@ class FacebookAppEventsPlugin(registrar: Registrar) : MethodCallHandler {
     result.success(null)
   }
 
-  private fun getApplicationId(call: MethodCall, result: Result) {
+  private fun handleGetApplicationId(call: MethodCall, result: Result) {
     result.success(appEventsLogger.getApplicationId())
+  }
+
+  private fun handleGetAnonymousId(call: MethodCall, result: Result) {
+    result.success(anonymousId)
   }
 
   private fun handleLogEvent(call: MethodCall, result: Result) {
@@ -189,6 +207,7 @@ class FacebookAppEventsPlugin(registrar: Registrar) : MethodCallHandler {
     result.success(null)
   }
 
+<<<<<<< HEAD
   private fun handleSetAdvertiserIdCollectionEnabled(call: MethodCall, result: Result) {
     val enabled = call.arguments as Boolean
     FacebookSdk.setAdvertiserIDCollectionEnabled(enabled)
@@ -207,6 +226,9 @@ class FacebookAppEventsPlugin(registrar: Registrar) : MethodCallHandler {
   }
 
   private fun setDataProcessingOptions(call: MethodCall, result: Result) {
+=======
+  private fun handleSetDataProcessingOptions(call: MethodCall, result: Result) {
+>>>>>>> master
     val options = call.argument("options") as? ArrayList<String> ?: arrayListOf()
     val country = call.argument("country") as? Int ?: 0
     val state = call.argument("state") as? Int ?: 0

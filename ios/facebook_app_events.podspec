@@ -7,12 +7,12 @@ Flutter plugin for Facebook Analytics and App Events
                        DESC
   s.homepage         = 'https://github.com/oddbit/flutter_facebook_app_events'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Oddbit Team' => 'flutter@oddbit.id' }
+  s.author           = { 'Oddbit Team' => 'opensource@oddbit.id' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'FBSDKCoreKit', '~> 7.1.0'
+  s.dependency 'FBSDKCoreKit', '~> 8.1.0'
   s.swift_version       = '4.0'
 
   s.ios.deployment_target = '8.0'

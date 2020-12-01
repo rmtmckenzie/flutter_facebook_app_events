@@ -16,8 +16,14 @@ class MyApp extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              RaisedButton(
-                color: Colors.green,
+              FutureBuilder(
+                future: facebookAppEvents.getAnonymousId(),
+                builder: (context, snapshot) {
+                  final id = snapshot.data ?? '???';
+                  return Text('Anonymous ID: $id');
+                },
+              ),
+              MaterialButton(
                 child: Text("Click me!"),
                 onPressed: () {
                   facebookAppEvents.logEvent(
@@ -28,8 +34,7 @@ class MyApp extends StatelessWidget {
                   );
                 },
               ),
-              RaisedButton(
-                color: Colors.green,
+              MaterialButton(
                 child: Text("Test purchase!"),
                 onPressed: () {
                   facebookAppEvents.logPurchase(amount: 1, currency: "USD");
